@@ -1,25 +1,61 @@
-import logo from './logo.svg';
-import './App.css';
+import { Layout, Menu, Table } from "antd";
+import {
+  DesktopOutlined,
+  PieChartOutlined,
+  FileOutlined,
+  TeamOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
+import React, { useEffect, useState } from "react";
+import { getMarket } from "./API/coingecko.js";
+import { AddtoWatch, WatchTable } from "./Components/EditWatch";
 
-function App() {
+const { Header, Footer, Sider, Content } = Layout;
+const { SubMenu } = Menu;
+
+const App = () => {
+  const [market, setMarket] = useState([]);
+  const [idList, setIdList] = useState([]);
+  const [watchId, setWatchId] = useState([]);
+  const [watch, setWatch] = useState([]);
+
+  const [collapsed, setCollapse] = useState(false);
+
+  useEffect(async () => {
+    const { market, idList } = await getMarket();
+    setMarket(market);
+    setIdList(idList);
+  }, []);
+
+  useEffect(() => {
+    let coins = market.filter((coin) => watchId.includes(coin.id));
+    setWatch([...coins]);
+  }, [watchId]);
+
+  const onCollapse = () => {
+    setCollapse(!collapsed);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Layout style={{ minHeight: "100vh" }}>
+        <Sider collapsible collapsed={collapsed} onCollapse={onCollapse}>
+          todo
+        </Sider>
+        <Layout className="site-layout">
+          <Header
+            className="site-layout-background"
+            style={{ padding: 0, background: "#fff" }}
+          />
+          <Content style={{ margin: "0 16px" }}>
+            <AddtoWatch idList={idList} setWatchId={setWatchId} />
+            <WatchTable watch={watch} setWatchId={setWatchId} />
+          </Content>
+          <Footer style={{ textAlign: "center" }}></Footer>
+        </Layout>
+      </Layout>
+    </>
   );
-}
+};
 
 export default App;
