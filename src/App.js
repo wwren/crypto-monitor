@@ -9,6 +9,7 @@ import {
 import React, { useEffect, useState } from "react";
 import { getMarket } from "./API/coingecko.js";
 import { AddtoWatch, WatchTable } from "./Components/EditWatch";
+import { NotifyForm } from "./Components/NotifyForm";
 
 const { Header, Footer, Sider, Content } = Layout;
 const { SubMenu } = Menu;
@@ -38,9 +39,15 @@ const App = () => {
 
   return (
     <>
-      <Layout style={{ minHeight: "100vh" }}>
-        <Sider collapsible collapsed={collapsed} onCollapse={onCollapse}>
-          todo
+      <Layout style={{ height: "100vh" }}>
+        <Sider
+          collapsible
+          collapsed={collapsed}
+          onCollapse={onCollapse}
+          width="30vw"
+          style={{ maxWidth: "400px" }}
+        >
+          <NotifyForm idList={idList} />
         </Sider>
         <Layout className="site-layout">
           <Header
